@@ -1,13 +1,16 @@
 package controller;
 
-import dao.ComplaintDAO;
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-import model.Complaint;
-
 import java.io.IOException;
 import java.util.List;
+
+import dao.ComplaintDAO;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import model.Complaint;
 
 @WebServlet("/ViewComplaints")
 public class ComplaintController extends HttpServlet {

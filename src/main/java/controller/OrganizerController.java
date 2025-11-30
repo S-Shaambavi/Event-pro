@@ -10,9 +10,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Booking;
 import model.Complaint;
 import model.Team;
-import model.Booking;
 
 @WebServlet("/OrganizerController")
 public class OrganizerController extends HttpServlet {

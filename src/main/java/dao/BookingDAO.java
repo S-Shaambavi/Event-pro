@@ -1,11 +1,14 @@
 package dao;
 
-import model.Booking;
-import util.DatabaseConnection;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Booking;
+import util.DatabaseConnection;
 
 public class BookingDAO {
 	private final Connection connection;

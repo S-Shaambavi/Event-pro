@@ -1,12 +1,15 @@
 package dao;
 
-import model.User;
-import util.DatabaseConnection;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import model.User;
+import util.DatabaseConnection;
 
 public class UserDAO implements GenericDAO<User> {
 	private final Connection connection;
