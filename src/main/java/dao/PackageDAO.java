@@ -21,18 +21,17 @@ public class PackageDAO implements GenericDAO<Package> {
 
 	@Override
 	public boolean create(Package pack) throws SQLException {
-		String query = "INSERT INTO event_package (package_id, package_name, attendee_count, venue_id, created_by, package_cost) VALUES (?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO event_package (package_name, attendee_count, venue_id, created_by, package_cost) VALUES (?, ?, ?, ?, ?)";
 		try (PreparedStatement ps = connection.prepareStatement(query)) {
-			ps.setInt(1, pack.getPackage_id());
-			ps.setString(2, pack.getPackage_name());
-			ps.setInt(3, pack.getAttendee_count());
-			ps.setInt(4, pack.getPackage_venue());
-			ps.setInt(5, pack.getPackage_creator());
-			ps.setDouble(6, pack.getPackage_cost());
+			ps.setString(1, pack.getPackage_name());
+			ps.setInt(2, pack.getAttendee_count());
+			ps.setInt(3, pack.getPackage_venue());
+			ps.setInt(4, pack.getPackage_creator());
+			ps.setDouble(5, pack.getPackage_cost());
 			return ps.executeUpdate() > 0;
 		}
 	}
-
+	
 	@Override
 	public Optional<Package> getById(String id) throws SQLException {
 		String query = "SELECT * FROM event_package WHERE package_id = ?";
@@ -91,6 +90,38 @@ public class PackageDAO implements GenericDAO<Package> {
 		pack.setPackage_creator(rs.getInt("created_by"));
 		pack.setPackage_cost(rs.getDouble("package_cost"));
 		return pack;
+	}
+
+	public static List<Package> searchEvents(String query) throws ClassNotFoundException {
+	    List<Package> resultList = new ArrayList<>();
+	    String sql = "SELECT * FROM packages WHERE package_name LIKE ? OR description LIKE ? OR category LIKE ?";
+
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	        String keyword = "%" + query + "%";
+	        stmt.setString(1, keyword);
+	        stmt.setString(2, keyword);
+	        stmt.setString(3, keyword);
+
+	        ResultSet rs = stmt.executeQuery();
+	        while (rs.next()) {
+	            Package pack = new Package();
+	            pack.setPackage_id(rs.getInt("package_id"));
+	    		pack.setPackage_name(rs.getString("package_name"));
+	    		pack.setAttendee_count(rs.getInt("attendee_count"));
+	    		pack.setPackage_venue(rs.getInt("venue_id")); 
+	    		pack.setPackage_creator(rs.getInt("created_by"));
+	    		pack.setPackage_cost(rs.getDouble("package_cost"));
+	            // add other fields as needed
+	            resultList.add(pack);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return resultList;
 	}
 
 }

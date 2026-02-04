@@ -1,4 +1,4 @@
-drop database event_management;
+-- drop database event_management;
 CREATE DATABASE IF NOT EXISTS event_management;
 USE event_management;
 
@@ -137,20 +137,22 @@ VALUES
 
 CREATE TABLE complaints (
     complaint_id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id INT,
     user_id INT NOT NULL,
     complaint_text TEXT NOT NULL,
     status ENUM('Pending', 'Resolved') DEFAULT 'Pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (booking_id) REFERENCES booking(booking_id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO complaints (user_id, complaint_text)
+INSERT INTO complaints (booking_id, user_id, complaint_text)
 VALUES
-(1, 'The decoration was not up to the mark.'),
-(2, 'Late arrival of the catering team.'),
-(3, 'Photography team missed key moments.'),
-(4, 'Venue was not cleaned properly.'),
-(5, 'Music band started late.');
+(1, 1, 'The decoration was not up to the mark.'),
+(2, 2, 'Late arrival of the catering team.'),
+(3, 3, 'Photography team missed key moments.'),
+(4, 4, 'Venue was not cleaned properly.'),
+(5, 5, 'Music band started late.');
 
 CREATE TABLE complaint_replies (
     reply_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -173,7 +175,7 @@ VALUES
 CREATE TABLE payment (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     booking_id INT NOT NULL,
-    managed_by INT NOT NULL, -- organizer (user_id)
+    managed_by INT NOT NULL DEFAULT 7,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     payment_amount DECIMAL(10,2) NOT NULL,
     payment_status ENUM('Pending', 'Complete') DEFAULT 'Pending',
@@ -186,13 +188,16 @@ CREATE TABLE payment (
 
 INSERT INTO payment (booking_id, managed_by, payment_amount, payment_status, card_number, expiry_date, card_cvv)
 VALUES 
-(1, 6, 55000.00, 'Complete', '9876543210987654', '11/27', '321'),
-(2, 7, 80000.00, 'Pending', '5555444433332222', '08/26', '456');
+(1, 6, 55000.00, 'Complete', '9876543210987654', '11/27', '123'),
+(2, 7, 80000.00, 'Pending', '5555444433332222', '08/26', '456'),
+(3, 8, 80000.00, 'Complete', '9876543210987654', '05/26', '789'),
+(4, 9, 80000.00, 'Pending', '5555444433332222', '08/27', '147'),
+(5, 7, 80000.00, 'Complete', '9876543210987654', '10/30', '258');
 
 CREATE OR REPLACE VIEW booking_details AS
 SELECT 
     b.booking_id,
-    b.customer_id,
+    CONCAT(u.user_fname, ' ', u.user_lname) AS customer_name,
     p.package_id,
     p.package_name,
     p.attendee_count,
@@ -207,24 +212,20 @@ JOIN users u ON b.customer_id = u.user_id;
 
 CREATE OR REPLACE VIEW complaint_reply_details AS
 SELECT 
-    cr.complaint_id,
+    c.complaint_id,
     cr.reply_id,
-    
-    -- Complainant (who made the complaint)
     CONCAT(complainer.user_fname, ' ', complainer.user_lname) AS complaint_user,
-    
-    -- Replier (who replied to the complaint)
     CONCAT(replier.user_fname, ' ', replier.user_lname) AS replied_user,
-    
-    -- Complaint status and texts
     c.status AS complaint_status,
     c.complaint_text,
     cr.reply_text
-
-FROM complaint_replies cr
-JOIN complaints c ON cr.complaint_id = c.complaint_id
-JOIN users replier ON cr.replier_id = replier.user_id
-JOIN users complainer ON c.user_id = complainer.user_id;
+FROM complaints c
+-- join user who made the complaint
+JOIN users complainer ON c.user_id = complainer.user_id
+-- include replies if available
+LEFT JOIN complaint_replies cr ON c.complaint_id = cr.complaint_id
+-- include replier info only if there's a reply
+LEFT JOIN users replier ON cr.replier_id = replier.user_id;
 
 DELIMITER //
 
@@ -238,4 +239,94 @@ BEGIN
 END;
 //
 
+DELIMITER ;
+
+
+CREATE OR REPLACE VIEW transaction_details AS
+SELECT
+b.booking_id,
+ep.package_name,
+b.booking_date,
+ep.package_cost,
+p.payment_status
+FROM booking b
+JOIN event_package ep ON b.package_id = ep.package_id
+JOIN payment p ON b.booking_id = p.booking_id;
+
+CREATE VIEW user_details AS
+SELECT 
+    b.booking_id,
+    u.user_email,
+    b.booking_date,
+    b.event_date,
+    ep.package_name,
+    ep.attendee_count,
+    v.venue_name,
+    GROUP_CONCAT(DISTINCT es.service_name SEPARATOR ', ') AS services,
+    p.payment_date,
+    p.payment_status,
+    p.payment_amount,
+    cr.reply_text,
+    cr.replied_at
+FROM booking b
+JOIN users u ON b.customer_id = u.user_id
+JOIN event_package ep ON b.package_id = ep.package_id
+LEFT JOIN event_venue v ON ep.venue_id = v.venue_id
+LEFT JOIN package_services ps ON ps.package_id = ep.package_id
+LEFT JOIN event_service es ON ps.service_id = es.service_id
+LEFT JOIN payment p ON p.booking_id = b.booking_id
+LEFT JOIN complaints c ON c.booking_id = b.booking_id AND c.user_id = u.user_id
+LEFT JOIN complaint_replies cr ON cr.complaint_id = c.complaint_id
+GROUP BY 
+    b.booking_id,
+    u.user_email,
+    b.booking_date,
+    b.event_date,
+    ep.package_name,
+    ep.attendee_count,
+    v.venue_name,
+    p.payment_date,
+    p.payment_status,
+    p.payment_amount,
+    cr.reply_text,
+    cr.replied_at;
+    
+CREATE VIEW payment_details AS
+SELECT
+p.payment_id,
+CONCAT(u.user_fname, ' ', u.user_lname) AS customer_name,
+ep.package_name,
+p.payment_amount,
+p.payment_status,
+b.booking_date,
+p.payment_date
+FROM payment p
+JOIN booking b ON p.booking_id = b.booking_id
+JOIN users u ON b.customer_id = u.user_id
+JOIN event_package ep ON b.package_id = ep.package_id;
+
+DELIMITER //
+CREATE TRIGGER after_booking_insert
+AFTER INSERT ON booking
+FOR EACH ROW
+BEGIN
+    INSERT INTO payment (
+        booking_id, 
+        managed_by, 
+        payment_amount, 
+        payment_status, 
+        card_number, 
+        expiry_date, 
+        card_cvv
+    ) VALUES (
+        NEW.booking_id,
+        7,                     -- default manager
+        10000.00,
+        'Pending',
+        '0000000000000000',    -- placeholder card info
+        '00/00',               -- placeholder expiry
+        '000'                  -- placeholder CVV
+    );
+END;
+//
 DELIMITER ;

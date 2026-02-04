@@ -33,7 +33,7 @@ public class ServiceController extends HttpServlet {
 		try {
 			System.out.println("Executing doGet() in UserController");
 			List<Service> serviceList = serviceDAO.getAll();
-			System.out.println("Retrieved " + serviceList.size() + " users");
+			System.out.println("Retrieved " + serviceList.size() + " services");
 			request.setAttribute("serviceList", serviceList);
 			request.getRequestDispatcher("/manage-services.jsp").forward(request, response);
 		} catch (SQLException e) {
@@ -72,7 +72,6 @@ public class ServiceController extends HttpServlet {
 
 	private void createService(HttpServletRequest request) throws SQLException {
 		Service service = new Service();
-		service.setService_id(request.getParameter("service_id"));
 		service.setService_name(request.getParameter("service_name"));
 		service.setService_description(request.getParameter("service_description"));
 		service.setService_price(Double.parseDouble(request.getParameter("service_price")));
@@ -82,7 +81,7 @@ public class ServiceController extends HttpServlet {
 
 	private void updateService(HttpServletRequest request) throws SQLException {
 		Service service = new Service();
-		service.setService_id(request.getParameter("service_id"));
+		service.setService_id(Integer.parseInt(request.getParameter("service_id")));
 		service.setService_name(request.getParameter("service_name"));
 		service.setService_description(request.getParameter("service_description"));
 		service.setService_price(Double.parseDouble(request.getParameter("service_price")));

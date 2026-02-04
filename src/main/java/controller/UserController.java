@@ -74,8 +74,6 @@ public class UserController extends HttpServlet {
 
 	private void createUser(HttpServletRequest request) throws SQLException {
 		User user = new User();
-		user.setUser_id(Integer.parseInt(request.getParameter("user_id")));
-
 		user.setUser_fName(request.getParameter("user_fName"));
 		user.setUser_lName(request.getParameter("user_lName"));
 		user.setUser_dob(Date.valueOf(request.getParameter("user_dob")));
@@ -83,7 +81,7 @@ public class UserController extends HttpServlet {
 		user.setUser_phone(request.getParameter("user_phone"));
 		user.setUser_address(request.getParameter("user_address"));
 		user.setUser_gender(request.getParameter("user_gender"));
-		user.setPassword(request.getParameter("password")); 
+		user.setPassword(request.getParameter("password"));
 		user.setUser_role(request.getParameter("user_role"));
 		user.setCreated_at(LocalDateTime.now().toString());
 		user.setUser_profile(request.getParameter("user_profile"));
@@ -94,7 +92,6 @@ public class UserController extends HttpServlet {
 	private void updateUser(HttpServletRequest request) throws SQLException {
 		User user = new User();
 		user.setUser_id(Integer.parseInt(request.getParameter("user_id")));
-
 		user.setUser_fName(request.getParameter("user_fName"));
 		user.setUser_lName(request.getParameter("user_lName"));
 		user.setUser_dob(Date.valueOf(request.getParameter("user_dob")));

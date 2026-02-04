@@ -1,289 +1,345 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="model.Complaint, model.Booking, model.Team" %>
+<%@ page import="model.ComplaintReply,model.BookingDetails,model.Team,model.PaymentDetails" %>
 <%@ page import="java.util.List" %>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <title>Organizer Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: #FFFFFF;
-            padding-top: 80px;
-        }
-
-        /* Navigation Bar */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: #1E1E1E;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 2%;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-        }
-
-        .top-nav .brand {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #BB86FC;
-        }
-
-        .top-nav ul {
-            display: flex;
-            list-style: none;
-            flex: 1;
-            justify-content: center;
-        }
-
-        .top-nav ul li {
-            margin: 0 12px;
-        }
-
-        .top-nav ul li a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #FFFFFF;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 1rem;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }
-
-        .top-nav ul li a:hover {
-            background-color: rgba(187, 134, 252, 0.1);
-            color: #BB86FC;
-            transform: scale(1.05);
-        }
-
-        .top-nav ul li a.active {
-            background-color: #BB86FC;
-            color: #121212;
-        }
-
-        /* Cards & Tables */
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        h1, h2 {
-            color: #FFFFFF;
-            margin-bottom: 15px;
-        }
-
-        .card {
-            background-color: #1E1E1E;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #333;
-            text-align: left;
-        }
-
-        th {
-            background-color: #272727;
-            color: #BB86FC;
-        }
-
-        tr:hover {
-            background-color: #2A2A2A;
-        }
-
-        a, button {
-            color: #03DAC6;
-            background: none;
-            border: none;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        a:hover, button:hover {
-            color: #CF6679;
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .top-nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .top-nav ul {
-                flex-direction: column;
-                width: 100%;
-                display: none;
-            }
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EventPro - Organizer Dashboard</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="style/Organizer.css">
 </head>
+
 <body>
-    <header>
-        <nav class="top-nav" id="topNav">
-            <div class="brand"><i class="fas fa-calendar-check"></i> EventPro</div>
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/OrganizerController" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-                <li><a href="${pageContext.request.contextPath}/features.jsp"><i class="fas fa-reply"></i> Send Reply</a></li>
-                <li><a href="${pageContext.request.contextPath}/TeamController"><i class="fas fa-users"></i> Manage Teams</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewBookings"><i class="fa fa-book"></i> Bookings</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>EventPro</h2>
+                <p>Organizer Dashboard</p>
+            </div>
+            <div class="sidebar-menu">
+                <a href="OrganizerController" class="menu-item active">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="#booking" class="menu-item">
+                    <i class="fas fa-calendar-alt"></i> Events
+                </a>
+                <a href="#teams" class="menu-item">
+                    <i class="fas fa-users"></i> Teams
+                </a>
+                <a href="#complaints" class="menu-item">
+                    <i class="fas fa-comments"></i> Complaints
+                </a>
+                <a href="#paymentDetails" class="menu-item">
+                    <i class="fas fa-money-check-alt"></i> PaymentDetails
+                </a>
+                <c:if test="${not empty sessionScope.user_email}">
+                    <a href="logout" class="menu-item">
+                        <i class="fas fa-sign-out-alt"></i> LogOut
+                    </a>
+                </c:if>
+            </div>
+        </div>
 
-    <div class="container">
-        <h1>Organizer Dashboard</h1>
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Dashboard Overview</h1>
+                <div class="user-info">
+                    <img src="assets/default-avatar.webp" alt="User">
+                    <span>Welcome, ${sessionScope.user_email}</span>
+                </div>
+            </div>
 
-        <!-- Complaints Section -->
-        <div class="card">
-            <h2>Complaints</h2>
-            <table>
+            <!-- Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3>Total Bookings</h3>
+                    <div class="value">24</div>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i> 12% from last month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Teams</h3>
+                    <div class="value">8</div>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i> 3% from last month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Complaints</h3>
+                    <div class="value">5</div>
+                    <div class="trend down">
+                        <i class="fas fa-arrow-down"></i> 20% from last month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Revenue</h3>
+                    <div class="value">$12,450</div>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i> 8% from last month
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bookings Section -->
+            <div class="section" id="booking">
+                <div class="section-header">
+                    <h2>Recent Bookings</h2>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Customer</th>
+                                <th>Package</th>
+                                <th>Attendees</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% List<BookingDetails> bookings = (List<BookingDetails>)
+                                    request.getAttribute("bookings");
+                                    if (bookings != null) {
+                                    for (BookingDetails b : bookings) {
+                                    %>
+                                    <tr>
+                                        <td>
+                                            <%= b.getBookingId() %>
+                                        </td>
+                                        <td>
+                                            <%= b.getCustomer_name() %>
+                                        </td>
+                                        <td>
+                                            <%= b.getPackageName() %>
+                                        </td>
+                                        <td>
+                                            <%= b.getAttendeeCount() %>
+                                        </td>
+                                        <td>
+                                            <%= b.getBookingDate() %>
+                                        </td>
+                                        <td>
+                                            <span class="status <%= b.getPaymentStatus() %>">
+                                                <%= b.getPaymentStatus() %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <% } } else { %>
+                                        <tr>
+                                            <td colspan="7" style="text-align:center;">No bookings
+                                                available.</td>
+                                        </tr>
+                                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Teams Section -->
+            <div class="section" id="teams">
+                <div class="section-header">
+                    <h2>Your Teams</h2>
+                    <a href="TeamController" class="btn">
+                        <i class="fas fa-users-cog"></i> Manage Teams
+                    </a>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Team ID</th>
+                                <th>Team Name</th>
+                                <th>Workers</th>
+                                <th>Assigned To</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% List<Team> teams = (List<Team>) request.getAttribute("teams");
+                                    if (teams != null) {
+                                    for (Team t : teams) {
+                                    %>
+                                    <tr>
+                                        <td>
+                                            <%= t.getTeamId() %>
+                                        </td>
+                                        <td>
+                                            <%= t.getTeamName() %>
+                                        </td>
+                                        <td>
+                                            <%= t.getNoOfWorkers() %>
+                                        </td>
+                                        <td>Booking No <%= t.getBooking_id() %>
+                                        </td>
+                                        <td>
+                                            <a href="TeamController" class="btn btn-secondary"
+                                                style="padding: 5px 10px; font-size: 0.8rem;">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <% } } else { %>
+                                        <tr>
+                                            <td colspan="5" style="text-align:center;">No teams available.
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Complaints Section -->
+<div class="section" id="complaints">
+    <div class="section-header">
+        <h2>Recent Complaints</h2>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>User ID</th>
-                    <th>Text</th>
+                    <th>Complaint ID</th>
+                    <th>From</th>
                     <th>Status</th>
-                    <th>Complained At</th>
+                    <th>Message</th>
+                    <th>Actions</th>
                 </tr>
+            </thead>
+            <tbody>
                 <%
-                    List<Complaint> complaints = (List<Complaint>) request.getAttribute("complaints");
-                    if (complaints != null) {
-                        for (Complaint c : complaints) {
+                    List<ComplaintReply> complaintreplies = (List<ComplaintReply>) request.getAttribute("complaintReplies");
+                    if (complaintreplies != null && !complaintreplies.isEmpty()) {
+                        for (ComplaintReply c : complaintreplies) {
                 %>
-                <tr>
-                    <td><%= c.getComplaint_id() %></td>
-                    <td><%= c.getUser_id() %></td>
-                    <td><%= c.getComplaint_text() %></td>
-                    <td><%= c.getComplaint_status() %></td>
-                    <td><%= c.getComplaint_at() %></td>
-                </tr>
-                <%
-                        }
-                    }
-                %>
-            </table>
-        </div>
+                    <tr>
+                        <td><%= c.getComplaint_id() %></td>
+                        <td><%= c.getComplaint_user() %></td>
+                        <td>
+                            <span class="status <%= c.getComplaint_status() %>">
+                                <%= c.getComplaint_status() %>
+                            </span>
+                        </td>
+                        <td>
+                            <%= c.getComplaint_text().length() > 50 ?
+                                    c.getComplaint_text().substring(0, 50) + "..." :
+                                    c.getComplaint_text() %>
+                        </td>
+                        <td>
+                            <!-- Reply Button -->
+                            <a href="manage-replies.jsp" class="btn btn-secondary"
+                               style="padding: 5px 10px; font-size: 0.8rem;">
+                                <i class="fas fa-comment-dots"></i> Reply
+                            </a>
 
-        <!-- Bookings Section -->
-        <div class="card">
-            <h2>Bookings</h2>
-            <table>
-                <tr>
-                    <th>Booking ID</th>
-                    <th>Customer ID</th>
-                    <th>Package ID</th>
-                    <th>Package Name</th>
-                    <th>Attendees</th>
-                    <th>Venue</th>
-                    <th>Payment Status</th>
-                    <th>Booking Date</th>
-                </tr>
-                <%
-                    List<Booking> bookings = (List<Booking>) request.getAttribute("bookings");
-                    if (bookings != null) {
-                        for (Booking b : bookings) {
-                %>
-                <tr>
-                    <td><%= b.getBookingId() %></td>
-                    <td><%= b.getCustomerId() %></td>
-                    <td><%= b.getPackageId() %></td>
-                    <td><%= b.getPackageName() %></td>
-                    <td><%= b.getAttendeeCount() %></td>
-                    <td><%= b.getPackageVenue() %></td>
-                    <td><%= b.getPaymentStatus() %></td>
-                    <td><%= b.getBookingDate() %></td>
-                </tr>
+                            <!-- Delete Button -->
+                            <button class="btn btn-danger"
+                                    style="padding: 5px 10px; font-size: 0.8rem;"
+                                    onclick="confirmDelete(<%= c.getComplaint_id() %>)">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
                 <%
                         }
+                    } else {
+                %>
+                    <tr>
+                        <td colspan="5" style="text-align:center;">No complaints available.</td>
+                    </tr>
+                <%
                     }
                 %>
-            </table>
-        </div>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-        <!-- Teams Section -->
-        <div class="card">
-            <h2>Teams</h2>
-                <a href="${pageContext.request.contextPath}/create_team.jsp" 
-       style=" 
-       		position: right;
-       		top: 20px; 
-       		right: 20px; 
-       		background-color: #BB86FC; 
-       		color: #121212; 
-       		padding: 8px 14px; 
-       		border-radius: 8px; 
-       		text-decoration: none; 
-       		font-weight: bold;">
-       + Add Team
-    </a>
-            <table>
-                <tr>
-                    <th>Team ID</th>
-                    <th>Team Name</th>
-                    <th>Workers</th>
-                    <th>Booking ID</th>
-                    <th>Assigned By</th>
-                </tr>
-                <%
-                    List<Team> teams = (List<Team>) request.getAttribute("teams");
-                    if (teams != null) {
-                        for (Team t : teams) {
-                %>
-                <tr>
-                    <td><%= t.getTeamId() %></td>
-                    <td><%= t.getTeamName() %></td>
-                    <td><%= t.getNoOfWorkers() %></td>
-                    <td><%= t.getBooking_id() %></td>
-                    <td><%= t.getAssigned_by() %></td>
-                </tr>
-                <%
-                        }
-                    }
-                %>
-            </table>
+<!-- Confirmation script -->
+<script>
+    function confirmDelete(id) {
+        if (confirm("Are you sure you want to delete this complaint?")) {
+            window.location.href = "manage-replies.jsp" ;
+        }
+    }
+</script>
+
+
+            <!-- Payment Details Section -->
+            <div class="section" id="paymentDetails">
+                <div class="section-header">
+                    <h2>Payment Details</h2>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Payment ID</th>
+                                <th>Event Name</th>
+                                <th>Booking Date</th>
+                                <th>Payment Date</th>
+                                <th>Status</th>
+                                <th>Amount (Rs.)</th>
+                                <th>Card Number</th>
+                                <th>Expiry</th>
+                                <th>CVV</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% List<PaymentDetails> paymentDetails = (List<PaymentDetails>)
+                                    request.getAttribute("payments");
+                                    if (paymentDetails != null && !paymentDetails.isEmpty()) {
+                                    for (PaymentDetails p : paymentDetails) {
+                                    %>
+                                    <tr>
+                                        <td>
+                                            <%= p.getPaymentId() %>
+                                        </td>
+                                        <td>
+                                            <%= p.getEventName() %>
+                                        </td>
+                                        <td>
+                                            <%= p.getBookingDate() %>
+                                        </td>
+                                        <td>
+                                            <%= p.getPaymentDate() %>
+                                        </td>
+                                        <td><span class="status <%= p.getPaymentStatus() %>">
+                                                <%= p.getPaymentStatus() %>
+                                            </span></td>
+                                        <td>
+                                            <%= String.format("%.2f", p.getPaymentAmount()) %>
+                                        </td>
+                                        <td>
+                                            <%= p.getCardNumber() %>
+                                        </td>
+                                        <td>
+                                            <%= p.getExpiryDate() %>
+                                        </td>
+                                        <td>
+                                            <%= p.getCardCvv() %>
+                                        </td>
+                                    </tr>
+                                    <% } } else { %>
+                                        <tr>
+                                            <td colspan="9" style="text-align:center;">No payment records
+                                                available.</td>
+                                        </tr>
+                                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
-
-    <script>
-        const topNav = document.getElementById('topNav');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                topNav.classList.add('scrolled');
-            } else {
-                topNav.classList.remove('scrolled');
-            }
-        });
-
-        const navItems = document.querySelectorAll('.top-nav ul li a');
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
-            });
-        });
-    </script>
 </body>
+
 </html>

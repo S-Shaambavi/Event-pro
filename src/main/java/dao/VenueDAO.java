@@ -21,14 +21,13 @@ public class VenueDAO implements GenericDAO<Venue> {
 
 	@Override
 	public boolean create(Venue venue) throws SQLException {
-		String query = "INSERT INTO event_venue (venue_id, venue_name, venue_status, venue_capacity, venue_cost, venue_image) VALUES (?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO event_venue (venue_name, venue_status, venue_capacity, venue_cost, venue_image) VALUES (?, ?, ?, ?, ?)";
 		try (PreparedStatement ps = connection.prepareStatement(query)) {
-			ps.setInt(1, venue.getVenue_id());
-			ps.setString(2, venue.getVenue_name());
-			ps.setString(3, venue.getVenue_status());
-			ps.setInt(4, venue.getVenue_capacity());
-			ps.setDouble(5, venue.getVenue_cost());
-			ps.setString(6, venue.getVenue_image());
+			ps.setString(1, venue.getVenue_name());
+			ps.setString(2, venue.getVenue_status());
+			ps.setInt(3, venue.getVenue_capacity());
+			ps.setDouble(4, venue.getVenue_cost());
+			ps.setString(5, venue.getVenue_image());
 			return ps.executeUpdate() > 0;
 		}
 	}

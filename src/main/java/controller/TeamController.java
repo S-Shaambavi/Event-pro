@@ -31,9 +31,10 @@ public class TeamController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
+			System.out.println("Executing doGet() in TeamController");
 			List<Team> teamList = teamDAO.getAll();
 			request.setAttribute("teamList", teamList);
-			request.getRequestDispatcher("manage-teams.jsp").forward(request, response);
+			request.getRequestDispatcher("/manage-teams.jsp").forward(request, response);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new ServletException("Error fetching team list", e);
@@ -69,7 +70,6 @@ public class TeamController extends HttpServlet {
 
 	private void createTeam(HttpServletRequest request) throws SQLException {
 		Team team = new Team();
-		team.setTeamId(Integer.parseInt(request.getParameter("team_id")));
 		team.setTeamName(request.getParameter("team_name"));
 		team.setNoOfWorkers(Integer.parseInt(request.getParameter("no_of_workers")));
 		team.setBooking_id(Integer.parseInt(request.getParameter("booking_id")));

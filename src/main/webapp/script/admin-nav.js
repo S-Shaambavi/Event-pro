@@ -101,3 +101,21 @@ window.addEventListener('scroll', () => {
 		}
 	}, 50);
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('nav a');
+    const currentPath = window.location.pathname;
+
+    // Iterate through each nav link
+    navLinks.forEach(link => {
+        // Check if the href of the link matches the current URL
+        if (link.getAttribute('href') === currentPath) {
+            // Add the active class if it's the current page
+            link.classList.add('active');
+        } else {
+            // Remove the active class if it's not the current page
+            link.classList.remove('active');
+        }
+    });
+});

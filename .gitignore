@@ -1,0 +1,68 @@
+# Compiled class files
+*.class
+
+# Build directories
+build/
+target/
+dist/
+out/
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Eclipse specific files
+.project
+.classpath
+.settings/
+*.launch
+.metadata/
+
+# IntelliJ IDEA specific files
+.idea/
+*.iml
+*.iws
+
+# NetBeans specific files
+nbproject/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# VS Code specific files
+.vscode/
+*.code-workspace
+
+# OS specific files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Maven specific
+dependency-reduced-pom.xml
+.mvn/
+
+# Gradle specific
+.gradle/
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+
+# Database files (if local)
+*.db
+*.sqlite
+
+# Server specific
+.tomcat/
+servers/

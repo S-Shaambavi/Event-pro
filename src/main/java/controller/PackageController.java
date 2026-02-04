@@ -61,7 +61,7 @@ public class PackageController extends HttpServlet {
 			default:
 				throw new IllegalArgumentException("Unknown action for package: " + action);
 			}
-			response.sendRedirect("PackageController"); 
+			response.sendRedirect("PackageController");
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
@@ -69,7 +69,6 @@ public class PackageController extends HttpServlet {
 
 	private void createPackage(HttpServletRequest request) throws SQLException {
 		Package pack = new Package();
-		pack.setPackage_id(Integer.parseInt(request.getParameter("package_id")));
 		pack.setPackage_name(request.getParameter("package_name"));
 		pack.setAttendee_count(Integer.parseInt(request.getParameter("attendee_count")));
 		pack.setPackage_venue(Integer.parseInt(request.getParameter("package_venue")));

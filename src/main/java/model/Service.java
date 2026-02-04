@@ -1,17 +1,27 @@
 package model;
 
 public class Service {
-	private String service_id;
+	private int service_id;
 	private String service_name;
 	private String service_description;
 	private double service_price;
 	private String service_image;
 
-	public String getService_id() {
+	public Service () {}
+	
+	public Service (int service_id, String service_name, String service_description, double service_price, String service_image) {
+		this.service_id = service_id;
+		this.service_name = service_name;
+		this.service_description = service_description;
+		this.service_price = service_price;
+		this.service_image = service_image;
+	}
+	
+	public int getService_id() {
 		return service_id;
 	}
 
-	public void setService_id(String service_id) {
+	public void setService_id(int service_id) {
 		this.service_id = service_id;
 	}
 

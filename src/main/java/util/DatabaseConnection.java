@@ -17,7 +17,7 @@ public class DatabaseConnection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String jdbcURL = "jdbc:mysql://localhost:3306/event_management";
 	private static final String dbUser = "root";
-	private static final String dbPassword = "2486";
+	private static final String dbPassword = "2002";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

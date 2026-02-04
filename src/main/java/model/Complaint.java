@@ -1,51 +1,49 @@
 package model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class Complaint {
-	private int complaint_id;
-	private int user_id;
-	private String complaint_text;
-	private String complaint_status;
-	private Timestamp complaint_at;
+    private int complaintId;
+    private int userId;
+    private int bookingId;
+    private String complaintText;
+    private String status;
+    private Date createdAt;
 
-	public int getComplaint_id() {
-		return complaint_id;
-	}
+    private String eventName; // Optional - populated via join
+    private Date eventDate;   // Optional - populated via join
 
-	public void setComplaint_id(int complaint_id) {
-		this.complaint_id = complaint_id;
-	}
+    public Complaint() {}
 
-	public int getUser_id() {
-		return user_id;
-	}
+    public Complaint(int userId, int bookingId, String complaintText) {
+        this.userId = userId;
+        this.bookingId = bookingId;
+        this.complaintText = complaintText;
+        this.status = "Pending";
+    }
 
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
-	}
+    // Getters and setters
+    public int getComplaintId() { return complaintId; }
+    public void setComplaintId(int complaintId) { this.complaintId = complaintId; }
 
-	public String getComplaint_text() {
-		return complaint_text;
-	}
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
 
-	public void setComplaint_text(String complaint_text) {
-		this.complaint_text = complaint_text;
-	}
+    public int getBookingId() { return bookingId; }
+    public void setBookingId(int bookingId) { this.bookingId = bookingId; }
 
-	public String getComplaint_status() {
-		return complaint_status;
-	}
+    public String getComplaintText() { return complaintText; }
+    public void setComplaintText(String complaintText) { this.complaintText = complaintText; }
 
-	public void setComplaint_status(String complaint_status) {
-		this.complaint_status = complaint_status;
-	}
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-	public Timestamp getComplaint_at() {
-		return complaint_at;
-	}
+    public Date getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 
-	public void setComplaint_at(Timestamp complaint_at) {
-		this.complaint_at = complaint_at;
-	}
+    public String getEventName() { return eventName; }
+    public void setEventName(String eventName) { this.eventName = eventName; }
+
+    public Date getEventDate() { return eventDate; }
+    public void setEventDate(Date eventDate) { this.eventDate = eventDate; }
 }

@@ -1,79 +1,65 @@
 package model;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 public class Booking {
-	private int bookingId;
 	private int customerId;
 	private int packageId;
-	private String packageName;
-	private int attendeeCount;
-	private String packageVenue;
-	private String paymentStatus;
-	private Timestamp bookingDate;
+	private Date eventDate;
+	private String eventType;
+	private String services;
 
-	public int getBookingId() {
-		return bookingId;
+	public Booking(int customerId, int packageId, Date eventDate) {
+		this.customerId = customerId;
+		this.packageId = packageId;
+		this.eventDate = eventDate;
 	}
 
-	public void setBookingId(int bookingId) {
-		this.bookingId = bookingId;
+	public Booking(int customerId, int packageId, Date eventDate, String eventType, String services) {
+		this.customerId = customerId;
+		this.packageId = packageId;
+		this.eventDate = eventDate;
+		this.eventType = eventType;
+		this.services = services;
 	}
 
 	public int getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
-	}
-
 	public int getPackageId() {
 		return packageId;
+	}
+
+	public Date getEventDate() {
+		return eventDate;
+	}
+
+	public String getEventType() {
+		return eventType;
+	}
+
+	public String getServices() {
+		return services;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
 	}
 
 	public void setPackageId(int packageId) {
 		this.packageId = packageId;
 	}
 
-	public String getPackageName() {
-		return packageName;
+	public void setEventDate(Date eventDate) {
+		this.eventDate = eventDate;
 	}
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+	public void setEventType(String eventType) {
+		this.eventType = eventType;
 	}
 
-	public int getAttendeeCount() {
-		return attendeeCount;
+	public void setServices(String services) {
+		this.services = services;
 	}
-
-	public void setAttendeeCount(int attendeeCount) {
-		this.attendeeCount = attendeeCount;
-	}
-
-	public String getPackageVenue() {
-		return packageVenue;
-	}
-
-	public void setPackageVenue(String packageVenue) {
-		this.packageVenue = packageVenue;
-	}
-
-	public String getPaymentStatus() {
-		return paymentStatus;
-	}
-
-	public void setPaymentStatus(String paymentStatus) {
-		this.paymentStatus = paymentStatus;
-	}
-
-	public Timestamp getBookingDate() {
-		return bookingDate;
-	}
-
-	public void setBookingDate(Timestamp bookingDate) {
-		this.bookingDate = bookingDate;
-	}
-
 }

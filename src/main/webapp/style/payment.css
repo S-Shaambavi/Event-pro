@@ -1,0 +1,97 @@
+/* Body styling */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background image styling */
+.background-image {
+    position: fixed;  /* Makes sure the image stays fixed on the background */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1; /* Ensures it stays behind the form */
+}
+
+.background-image {
+    width: 100%; /* Full-width image */
+    height: 100%; /* Full height */
+    object-fit: cover; /* Ensures the image covers the entire background */
+    filter: blur(8px); /* Apply blur to background image */
+}
+
+/* Payment form container */
+.payment-container {
+    background: rgba(255, 255, 255, 0.75); /* Slightly transparent background */
+    backdrop-filter: blur(10px); /* Adds additional blur effect for form */
+    -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    max-width: 420px;
+    width: 90%;
+    z-index: 1; /* Ensure form is above background */
+    box-sizing: border-box;
+}
+
+/* Heading styling */
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: #34495e;
+}
+
+/* Form input styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+input[type="text"], input[type="month"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-sizing: border-box;
+    transition: border 0.3s ease;
+}
+
+input:focus {
+    border-color: #8e44ad;
+    outline: none;
+}
+
+/* Submit button styling */
+button {
+    width: 100%;
+    padding: 12px;
+    background: #8e44ad;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #732d91;
+}

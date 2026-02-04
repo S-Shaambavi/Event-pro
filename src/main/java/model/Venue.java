@@ -8,6 +8,20 @@ public class Venue {
 	private double venue_cost;
 	private String venue_image;
 
+	public Venue() {
+
+	}
+
+	public Venue(int venue_id, String venue_name, String venue_status, int venue_capacity, double venue_cost,
+			String venue_image) {
+		this.venue_id = venue_id;
+		this.venue_name = venue_name;
+		this.venue_status = venue_status;
+		this.venue_capacity = venue_capacity;
+		this.venue_cost = venue_cost;
+		this.venue_image = venue_image;
+	}
+
 	public int getVenue_id() {
 		return venue_id;
 	}

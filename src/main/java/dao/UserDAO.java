@@ -23,18 +23,17 @@ public class UserDAO implements GenericDAO<User> {
 		String query = "INSERT INTO users (user_id, user_fName, user_lName, user_dob, user_email, user_phone, user_address, user_gender, password, user_role, created_at, user_profile) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement ps = connection.prepareStatement(query)) {
 			ps.setInt(1, user.getUser_id());
-
-			ps.setString(3, user.getUser_fName());
-			ps.setString(4, user.getUser_lName());
-			ps.setDate(5, user.getUser_dob());
-			ps.setString(6, user.getUser_email());
-			ps.setString(7, user.getUser_phone());
-			ps.setString(8, user.getUser_address());
-			ps.setString(9, user.getUser_gender());
-			ps.setString(10, user.getPassword());
-			ps.setString(11, user.getUser_role());
-			ps.setString(12, user.getCreated_at());
-			ps.setString(13, user.getUser_profile());
+			ps.setString(2, user.getUser_fName());
+			ps.setString(3, user.getUser_lName());
+			ps.setDate(4, user.getUser_dob());
+			ps.setString(5, user.getUser_email());
+			ps.setString(6, user.getUser_phone());
+			ps.setString(7, user.getUser_address());
+			ps.setString(8, user.getUser_gender());
+			ps.setString(9, user.getPassword());
+			ps.setString(10, user.getUser_role());
+			ps.setString(11, user.getCreated_at());
+			ps.setString(12, user.getUser_profile());
 			return ps.executeUpdate() > 0;
 		}
 	}
@@ -72,18 +71,18 @@ public class UserDAO implements GenericDAO<User> {
 		String query = "UPDATE users SET user_fName = ?, user_lName = ?, user_dob = ?, user_email = ?, user_phone = ?, user_address = ?, user_gender = ?, password = ?, user_role = ?, created_at = ?, user_profile = ? WHERE user_id = ?";
 		try (PreparedStatement ps = connection.prepareStatement(query)) {
 
-			ps.setString(2, user.getUser_fName());
-			ps.setString(3, user.getUser_lName());
-			ps.setDate(4, user.getUser_dob());
-			ps.setString(5, user.getUser_email());
-			ps.setString(6, user.getUser_phone());
-			ps.setString(7, user.getUser_address());
-			ps.setString(8, user.getUser_gender());
-			ps.setString(9, user.getPassword());
-			ps.setString(10, user.getUser_role());
-			ps.setString(11, user.getCreated_at());
-			ps.setString(12, user.getUser_profile());
-			ps.setInt(13, user.getUser_id());
+			ps.setString(1, user.getUser_fName());
+			ps.setString(2, user.getUser_lName());
+			ps.setDate(3, user.getUser_dob());
+			ps.setString(4, user.getUser_email());
+			ps.setString(5, user.getUser_phone());
+			ps.setString(6, user.getUser_address());
+			ps.setString(7, user.getUser_gender());
+			ps.setString(8, user.getPassword());
+			ps.setString(9, user.getUser_role());
+			ps.setString(10, user.getCreated_at());
+			ps.setString(11, user.getUser_profile());
+			ps.setInt(12, user.getUser_id());
 			return ps.executeUpdate() > 0;
 		}
 	}
@@ -100,7 +99,6 @@ public class UserDAO implements GenericDAO<User> {
 	private User mapResultSetToUser(ResultSet rs) throws SQLException {
 		User user = new User();
 		user.setUser_id(rs.getInt("user_id"));
-
 		user.setUser_fName(rs.getString("user_fName"));
 		user.setUser_lName(rs.getString("user_lName"));
 		user.setUser_dob(rs.getDate("user_dob"));

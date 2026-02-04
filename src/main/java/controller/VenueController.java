@@ -72,7 +72,6 @@ public class VenueController extends HttpServlet {
 
 	private void createVenue(HttpServletRequest request) throws SQLException {
 		Venue venue = new Venue();
-		venue.setVenue_id(Integer.parseInt(request.getParameter("venue_id")));
 		venue.setVenue_name(request.getParameter("venue_name"));
 		venue.setVenue_status(request.getParameter("venue_status"));
 		venue.setVenue_capacity(Integer.parseInt(request.getParameter("venue_capacity")));

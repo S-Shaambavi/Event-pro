@@ -4,12 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Booking;
-import model.Complaint;
+import model.BookingDetails;
+import model.PaymentDetails;
 import model.Team;
 import util.DatabaseConnection;
 
@@ -20,36 +19,16 @@ public class OrganizerDAO {
 		this.connection = DatabaseConnection.getConnection();
 	}
 
-	public List<Complaint> getAllComplaints() throws SQLException {
-		List<Complaint> complaints = new ArrayList<>();
-		String query = "SELECT * FROM complaints";
-
-		try (Statement stmt = connection.createStatement(); 
-				ResultSet rs = stmt.executeQuery(query)) {
-			while (rs.next()) {
-				Complaint complaint = new Complaint();
-				complaint.setComplaint_id(rs.getInt("complaint_id"));
-				complaint.setUser_id(rs.getInt("user_id"));
-				complaint.setComplaint_text(rs.getString("complaint_text"));
-				complaint.setComplaint_status(rs.getString("status"));
-				complaint.setComplaint_at(rs.getTimestamp("created_at"));
-
-				complaints.add(complaint);
-			}
-		}
-		return complaints;
-	}
-
-    public List<Booking> getAllBookings() throws SQLException {
-        List<Booking> bookings = new ArrayList<>();
+    public List<BookingDetails> getAllBookings() throws SQLException {
+        List<BookingDetails> bookings = new ArrayList<>();
         String query = "SELECT * FROM booking_details"; // corrected table name
 
         try (PreparedStatement ps = connection.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Booking booking = new Booking();
+                BookingDetails booking = new BookingDetails();
                 booking.setBookingId(rs.getInt("booking_id"));
-                booking.setCustomerId(rs.getInt("customer_id"));
+                booking.setCustomer_name(rs.getString("customer_name"));
                 booking.setPackageId(rs.getInt("package_id"));
                 booking.setPackageName(rs.getString("package_name"));
                 booking.setAttendeeCount(rs.getInt("attendee_count"));
@@ -79,5 +58,42 @@ public class OrganizerDAO {
             }
         }
         return teams;
+    }
+    
+    public List<PaymentDetails> getAllPayments() throws SQLException {
+        List<PaymentDetails> payments = new ArrayList<>();
+        String query = "SELECT " +
+                "p.payment_id, " +
+                "ep.package_name AS event_name, " +
+                "b.booking_date, " +
+                "p.payment_date, " +
+                "p.payment_amount, " +
+                "p.payment_status, " +
+                "p.card_number, " +
+                "p.expiry_date, " +
+                "p.card_cvv " +
+                "FROM payment p " +
+                "JOIN booking b ON p.booking_id = b.booking_id " +
+                "JOIN event_package ep ON b.package_id = ep.package_id " +
+                "JOIN users u ON b.customer_id = u.user_id " +
+                "ORDER BY p.payment_date DESC"; // corrected table name
+
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+            	PaymentDetails payment = new PaymentDetails();
+            	payment.setPaymentId(rs.getInt("payment_id"));
+            	payment.setEventName(rs.getString("event_name"));
+            	payment.setBookingDate(rs.getString("booking_date"));
+            	payment.setPaymentDate(rs.getString("payment_date"));
+            	payment.setPaymentStatus(rs.getString("payment_status"));
+            	payment.setPaymentAmount(rs.getDouble("payment_amount"));
+            	payment.setCardNumber(rs.getString("card_number"));
+            	payment.setExpiryDate(rs.getString("expiry_date"));
+            	payment.setCardCvv(rs.getString("card_cvv"));
+                payments.add(payment);
+            }
+        }
+        return payments;
     }
 }
